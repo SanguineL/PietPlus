@@ -399,3 +399,4 @@ eraseBtn.addEventListener("click", () => {
 paintBtn.addEventListener("click", () => {
   erase = false;
 });
+
