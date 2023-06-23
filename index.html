@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="author" content="Alex Strickland" />
+    <meta name="copyright" content="2023" />
+    <title>Piet++</title>
+    <!-- Google Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@500&display=swap"
+      rel="stylesheet"
+    />
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="main"></div>
+      <div class="button_wrapper">
+        <button class="colorbutton" id='lbutton0'></button>
+        <button class="colorbutton" id='mbutton0'></button>
+        <button class="colorbutton" id='rbutton0'></button>
+
+        <button class="colorbutton" id='lbutton1'></button>
+        <button class="colorbutton" id='mbutton1'></button>
+        <button class="colorbutton" id='rbutton1'></button>
+
+        <button class="colorbutton" id='lbutton2'></button>
+        <button class="colorbutton" id='mbutton2'></button>
+        <button class="colorbutton" id='rbutton2'></button>
+
+        <button class="colorbutton" id='lbutton3'></button>
+        <button class="colorbutton" id='mbutton3'></button>
+        <button class="colorbutton" id='rbutton3'></button>
+
+        <button class="colorbutton" id='lbutton4'></button>
+        <button class="colorbutton" id='mbutton4'></button>
+        <button class="colorbutton" id='rbutton4'></button>
+
+        <button class="colorbutton" id='lbutton5'></button>
+        <button class="colorbutton" id='mbutton5'></button>
+        <button class="colorbutton" id='rbutton5'></button>
+
+        <button class="colorbutton" id='lbutton6'></button>
+        <button class="colorbutton" id='mbutton6'></button>
+        
+        
+      </div>
+      <div class="wrapper">
+        <div class="options">
+          <div class="opt-wrapper">
+            <button id="reset-grid">Config Grid</button>
+            <button id="clear-grid">Clear Grid</button>
+            <button id="erase-btn">Erase</button>
+            <button id="paint-btn">Draw</button>
+            <input type="file" class="file" id="attachment" style="display: none;" />
+            <button id="upload-image-btn">Import</button>
+            <button id="save-image-btn">Save</button>
+          </div>
+        </div>
+        <dialog id = "dialog">
+          <div class="gridDir">
+            <label for="width-range">Width</label>
+            <input type="number" id="width-range" max="300"/>
+          </div>
+          <div class="gridDir">
+            <label for="height-range">Height</label>
+            <input type="number" id="height-range" max="300" />
+          </div>
+          <button id="submit-grid">Create Grid</button>
+        </dialog>
+        <div class="container"></div>
+      </div>
+    </div>
+    <!-- Script -->
+    <script src="script.js"></script>
+  </body>
+</html>
