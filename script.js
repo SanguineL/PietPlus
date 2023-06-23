@@ -400,3 +400,4 @@ paintBtn.addEventListener("click", () => {
   erase = false;
 });
 
+
