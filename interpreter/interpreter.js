@@ -35,9 +35,11 @@ function getBlock(x, y) { //Using x, y of inital codel.
 			var dY = Y+dCol[i];
 
 			if (in_same_block(getCodel(X, Y), getCodel(dX, dY)) && visited[dX][dY] == false) {
-				currentBlockMembers.push([dX, dY]);
-				visited[dX][dY] = true;
-				queue.push([dX, dY]);
+				if (!checkArrayInArray(currentBlockMembers, [dX, dY])) {
+					currentBlockMembers.push([dX, dY]);
+					visited[dX][dY] = true;
+					queue.push([dX, dY]);
+				}
 			}
 		}
 	}

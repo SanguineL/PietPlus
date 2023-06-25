@@ -25,7 +25,24 @@ body {
   border-radius: 8px;
   position: relative;
   vertical-align: top;
+  width: 100%;
+}
+
+.left-column {
   width: 15%;
+  display: inline-block;
+  position: relative;
+  vertical-align: top;
+  height: 100vh;
+}
+
+.block-info {
+  margin-top: 10px;
+  background-color: #45464A;
+  padding: 20px 20px;
+  width: 100%;
+  border-radius: 8px;
+  text-align: center;
 }
 
 label {
@@ -71,7 +88,19 @@ button {
   padding: 3px 3px 40px;
   margin-bottom: 9px;
   width: 29%;
-  color: #1E1E20;
+  color: black;
+}
+
+.switchbutton {
+  padding: 3px 3px 40px;
+  margin-bottom: 9px;
+  width: 29%;
+}
+
+i {
+  margin-top: 30px;
+  margin-bottom: 0px;
+  color:black;
 }
 
 input[type="color"] {
@@ -102,7 +131,7 @@ input[type="color"]::-moz-color-swatch {
   display: flex;
 }
 .container {
-  max-height: 30em;
+  max-height: 90vh;
   max-width:  65em;
   overflow-x: auto;
   overflow-y: auto;

@@ -12,38 +12,51 @@
     />
     <!-- Stylesheet -->
     <link rel="stylesheet" href="style.css" />
+    <script src="https://kit.fontawesome.com/60e56e3ac4.js" crossorigin="anonymous"></script>
   </head>
   <body>
     <div class="main">
-      <div class="button_wrapper">
-        <button class="colorbutton" id='lbutton0'></button>
-        <button class="colorbutton" id='mbutton0'></button>
-        <button class="colorbutton" id='rbutton0'></button>
+      <div class="left-column">
+        <div class="button_wrapper">
+          <button class="colorbutton" id='lbutton0'></button>
+          <button class="colorbutton" id='mbutton0'></button>
+          <button class="colorbutton" id='rbutton0'></button>
 
-        <button class="colorbutton" id='lbutton1'></button>
-        <button class="colorbutton" id='mbutton1'></button>
-        <button class="colorbutton" id='rbutton1'></button>
+          <button class="colorbutton" id='lbutton1'></button>
+          <button class="colorbutton" id='mbutton1'></button>
+          <button class="colorbutton" id='rbutton1'></button>
 
-        <button class="colorbutton" id='lbutton2'></button>
-        <button class="colorbutton" id='mbutton2'></button>
-        <button class="colorbutton" id='rbutton2'></button>
+          <button class="colorbutton" id='lbutton2'></button>
+          <button class="colorbutton" id='mbutton2'></button>
+          <button class="colorbutton" id='rbutton2'></button>
 
-        <button class="colorbutton" id='lbutton3'></button>
-        <button class="colorbutton" id='mbutton3'></button>
-        <button class="colorbutton" id='rbutton3'></button>
+          <button class="colorbutton" id='lbutton3'></button>
+          <button class="colorbutton" id='mbutton3'></button>
+          <button class="colorbutton" id='rbutton3'></button>
 
-        <button class="colorbutton" id='lbutton4'></button>
-        <button class="colorbutton" id='mbutton4'></button>
-        <button class="colorbutton" id='rbutton4'></button>
+          <button class="colorbutton" id='lbutton4'></button>
+          <button class="colorbutton" id='mbutton4'></button>
+          <button class="colorbutton" id='rbutton4'></button>
 
-        <button class="colorbutton" id='lbutton5'></button>
-        <button class="colorbutton" id='mbutton5'></button>
-        <button class="colorbutton" id='rbutton5'></button>
+          <button class="colorbutton" id='lbutton5'></button>
+          <button class="colorbutton" id='mbutton5'></button>
+          <button class="colorbutton" id='rbutton5'></button>
 
-        <button class="colorbutton" id='lbutton6'></button>
-        <button class="colorbutton" id='mbutton6'></button>
-        
-      </div>
+          <button class="colorbutton" id='lbutton6' type="reset">
+            <i class="fa-solid fa-minus" style="color:white"></i>
+          </button>
+          <button class="colorbutton" id='mbutton6' type="reset">
+            <i class="fa-solid fa-minus"></i>
+          </button>
+          <button class="switchbutton" id="toolswitch" type="reset">
+            <i class="fa-solid fa-fill" id="tool-icon"></i>
+          </button>
+          
+        </div> <!-- END OF BUTTON WRAPPER -->
+        <div class="block-info">
+          <label id="block-info-label"></label>
+        </div>
+      </div> <!-- END OF LEFT COLUMN -->
       <div class="wrapper">
         <div class="options">
           <div class="opt-wrapper">
@@ -55,7 +68,7 @@
             <button id="upload-image-btn">Import</button>
             <button id="save-image-btn">Save</button>
           </div>
-        </div>
+        </div> <!-- END OF OPTIONS -->
         <dialog id = "dialog">
           <div class="gridDir">
             <label for="width-range">Width</label>

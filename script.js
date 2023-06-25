@@ -26,6 +26,10 @@ let output = document.getElementById("output");
 let stackDisplay = document.getElementById("stack-display");
 let commandDisplay = document.getElementById("command-disp");
 
+let toolSwitchButton = document.getElementById("toolswitch");
+
+let blockInfoLabel = document.getElementById("block-info-label");
+
 
 //Events object
 let events = {
@@ -44,6 +48,7 @@ let deviceType = "";
 //Initially draw and erase would be false
 let draw = false;
 let erase = false;
+let tool = 'paint';
 
 let selected_pos = {0: 0, 1: 0};
 let current_pos = {0: 0, 1: 0};
@@ -64,7 +69,7 @@ let colors = [[[255, 192, 192], [255, 0, 0], [192, 0, 0]],
               [[192, 192, 255], [0, 0, 255], [0, 0, 192]],
               [[255, 192, 255], [255, 0, 255], [192, 0, 192]],
               [[255, 255, 255], [0, 0, 0]]
-             ]
+             ];
 
 let color_strings = {
     0: {0: "*", 1: "push", 2: "pop"},
@@ -73,13 +78,16 @@ let color_strings = {
     3: {0: "great", 1: "point", 2: "switch"},
     4: {0: "dup", 1: "roll", 2: "in(n)"},
     5: {0: "in(c)", 1: "out(n)", 2: "out(c)"}
-}
+};
 
 window.onload = () => {
   gridWidth.value = 10;
   gridHeight.value = 10;
 
   buttons = document.getElementsByClassName('colorbutton');
+  
+
+  toolSwitchButton.addEventListener("click", () => switch_tool());
 
   resetGridButton.addEventListener("click", () => show_dialog());
 
@@ -96,8 +104,10 @@ window.onload = () => {
 
   shift_words(0, 0);
 
-
 };
+
+//On Press, create grid
+gridButton.addEventListener("click", () => create_grid());
 
 //Detect touch device
 const isTouchDevice = () => {
@@ -117,9 +127,6 @@ function show_dialog(element) {
   dialog.className = 'dialog';
   dialog.showModal();
 }
-
-//On Press, create grid
-gridButton.addEventListener("click", () => create_grid());
 
 function create_grid(element, file=null) {
   dialog.className = '';
@@ -153,6 +160,7 @@ function create_grid(element, file=null) {
         if deviceType="touch"
         the statement for event would be events[touch].down which equals to touchstart
          */
+        col.addEventListener("mouseover", () => display_block_size(j, i));
         col.addEventListener(events[deviceType].down, () => {
           //user starts drawing
           draw = true;
@@ -160,10 +168,18 @@ function create_grid(element, file=null) {
           if (erase) {
             col.style.backgroundColor = "rgb(255, 255, 255)";
             col.style.border = '1px solid #ddd';
-          } else {
+          } else if (tool == 'paint') {
             col.style.backgroundColor = 'rgb(' + colors[selected_pos[0]][selected_pos[1]].join(',') + ')';
             col.style.border = '1px solid rgb(' + colors[selected_pos[0]][selected_pos[1]].join(',') + ')';
+          } else {
+            let block = getBlock(j, i);
+
+            for (c = 0; c < block.length; c++) {
+              getCodel(block[c][0], block[c][1]).style.backgroundColor = 'rgb(' + colors[selected_pos[0]][selected_pos[1]].join(',') + ')';
+              getCodel(block[c][0], block[c][1]).style.border = '1px solid rgb(' + colors[selected_pos[0]][selected_pos[1]].join(',') + ')';
+            }
           }
+          display_block_size(j, i);
         });
         col.addEventListener(events[deviceType].move, (e) => {
           /* elementFromPoint returns the element at x,y position of mouse */
@@ -250,20 +266,27 @@ function create_grid(element, file=null) {
     create_grid();
   }
 }
+
 function checker(elementId) {
   let gridColumns = document.querySelectorAll(".gridCol");
   //loop through all boxes
+  let i = 0;
   gridColumns.forEach((element) => {
+    let x = i%grid_width;
+    let y = Math.floor(i/grid_height);
     //if id matches then color
     if (elementId == element.id) {
       if (draw && !erase) {
         element.style.backgroundColor = 'rgb(' + colors[selected_pos[0]][selected_pos[1]].join(',') + ')';
         element.style.border = '1px solid rgb(' + colors[selected_pos[0]][selected_pos[1]].join(',') + ')';
+        display_block_size(x, y);
       } else if (draw && erase) {
-        element.style.backgroundColor = "rbg(255, 255, 255)";
+        element.style.backgroundColor = "rgb(255, 255, 255)";
         element.style.border = '1px solid #ddd';
+        display_block_size(x, y);
       }
     }
+    i = i + 1;
   });
 }
 
@@ -271,6 +294,8 @@ function shift_words(row_index, column_index) {
   selected_pos[0] = row_index;
   selected_pos[1] = column_index;
 
+  //Set toolbutton background color
+  toolSwitchButton.style.backgroundColor = 'rgb(' + colors[row_index][column_index].join(',') + ')';
   
   let dy = selected_pos[0] - current_pos[0];
   let dx = selected_pos[1] - current_pos[1];
@@ -406,6 +431,22 @@ function setPixelXY(imgData, x, y, r, g, b, a) {
   return setPixel(imgData, y*imgData.width+x, r, g, b, a);
 }
 
+function switch_tool(element) {
+  let icon = document.getElementById('tool-icon');
+  if (tool == 'paint') {
+    tool = 'fill';
+    icon.classList.remove("fa-fill");
+    icon.classList.add("fa-brush");
+  } else {
+    tool = 'paint';
+    icon.classList.remove("fa-brush");
+    icon.classList.add("fa-fill");
+  }
+}
+
+function display_block_size(x, y) {
+  blockInfoLabel.innerHTML = "Block size: " + getBlock(x, y).length;
+}
 //Clear Grid
 clearGridButton.addEventListener("click", () => {
   grid_width = 0;
@@ -421,8 +462,7 @@ eraseBtn.addEventListener("click", () => {
 paintBtn.addEventListener("click", () => {
   erase = false;
 });
-
-//
+//Start button
 startButton.addEventListener("click", () =>{
   start();
 })

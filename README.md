@@ -9,12 +9,15 @@ Piet is an esoteric programming language, which is based on the geometric artist
 ## Features
 - IDE
 - Self-Correcting Color List
+- Block Size Display
+- Fill Option
 - Import from Image (png, jpg)
 - Export to PNG
 
 ## Future Additions
 - Interpreter
 - Real-time runtime display (active codels, current stack, CC, DP)
+- Different Codel Sizes
 - Improved Layout
 - Compiler??
 - Shortcuts (Ex: 'x' for 'push')
