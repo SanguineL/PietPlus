@@ -1,6 +1,8 @@
 //Initial references
 let container = document.querySelector(".container");
 let dialog = document.getElementById("dialog");
+
+//Grid Controls
 let gridButton = document.getElementById("submit-grid");
 let clearGridButton = document.getElementById("clear-grid");
 let resetGridButton = document.getElementById("reset-grid");
@@ -12,6 +14,19 @@ let widthValue = document.getElementById("width-range");
 let heightValue = document.getElementById("height-range");
 let importButton = document.getElementById("upload-image-btn");
 let saveButton = document.getElementById("save-image-btn");
+
+//Interpreter Controls
+let startButton = document.getElementById("start-button");
+let stepButton = document.getElementById("step-button");
+let pauseButton = document.getElementById("pause-button");
+
+//Interpreter Displays
+let input = document.getElementById("input");
+let output = document.getElementById("output");
+let stackDisplay = document.getElementById("stack-display");
+let commandDisplay = document.getElementById("command-disp");
+
+
 //Events object
 let events = {
   mouse: {
@@ -29,8 +44,9 @@ let deviceType = "";
 //Initially draw and erase would be false
 let draw = false;
 let erase = false;
-let selected_color = {0: 0, 1: 0};
-let current_color = {0: 0, 1: 0};
+
+let selected_pos = {0: 0, 1: 0};
+let current_pos = {0: 0, 1: 0};
 
 let grid_width = 0;
 let grid_height = 0;
@@ -109,9 +125,9 @@ function create_grid(element, file=null) {
   dialog.className = '';
   dialog.close();
 
-  if (grid_width == 0 & grid_height == 0 & file == null) {
-    grid_width = gridWidth.value;
-    grid_height = gridHeight.value;
+  if (grid_width == 0 && grid_height == 0 && file == null) {
+    grid_width = parseInt(gridWidth.value);
+    grid_height = parseInt(gridHeight.value);
   //Initially clear the grid (old grids cleared)
     container.innerHTML = "";
     //count variable for generating unique ids
@@ -143,9 +159,10 @@ function create_grid(element, file=null) {
           //if erase = true then background = transparent else color
           if (erase) {
             col.style.backgroundColor = "rgb(255, 255, 255)";
+            col.style.border = '1px solid #ddd';
           } else {
-            col.style.backgroundColor = 'rgb(' + colors[selected_color[0]][selected_color[1]].join(',') + ')';
-            col.style.border = '1px solid rgb(' + colors[selected_color[0]][selected_color[1]].join(',') + ')';
+            col.style.backgroundColor = 'rgb(' + colors[selected_pos[0]][selected_pos[1]].join(',') + ')';
+            col.style.border = '1px solid rgb(' + colors[selected_pos[0]][selected_pos[1]].join(',') + ')';
           }
         });
         col.addEventListener(events[deviceType].move, (e) => {
@@ -226,6 +243,11 @@ function create_grid(element, file=null) {
       //append grid to container
       container.appendChild(div);
     }
+  } else {
+    grid_width = 0;
+    grid_height = 0;
+    container.innerHTML = "";
+    create_grid();
   }
 }
 function checker(elementId) {
@@ -235,8 +257,8 @@ function checker(elementId) {
     //if id matches then color
     if (elementId == element.id) {
       if (draw && !erase) {
-        element.style.backgroundColor = 'rgb(' + colors[selected_color[0]][selected_color[1]].join(',') + ')';
-        element.style.border = '1px solid rgb(' + colors[selected_color[0]][selected_color[1]].join(',') + ')';
+        element.style.backgroundColor = 'rgb(' + colors[selected_pos[0]][selected_pos[1]].join(',') + ')';
+        element.style.border = '1px solid rgb(' + colors[selected_pos[0]][selected_pos[1]].join(',') + ')';
       } else if (draw && erase) {
         element.style.backgroundColor = "rbg(255, 255, 255)";
         element.style.border = '1px solid #ddd';
@@ -246,12 +268,12 @@ function checker(elementId) {
 }
 
 function shift_words(row_index, column_index) {
-  selected_color[0] = row_index;
-  selected_color[1] = column_index;
+  selected_pos[0] = row_index;
+  selected_pos[1] = column_index;
 
   
-  let dy = selected_color[0] - current_color[0];
-  let dx = selected_color[1] - current_color[1];
+  let dy = selected_pos[0] - current_pos[0];
+  let dx = selected_pos[1] - current_pos[1];
 
   if (dx < 0) {
     dx = 3 + dx;
@@ -268,8 +290,8 @@ function shift_words(row_index, column_index) {
         buttons[z].innerHTML = color_strings[Math.floor(z/3)][z%3];
       }
 
-      current_color[0] = row_index;
-      current_color[1] = column_index;
+      current_pos[0] = row_index;
+      current_pos[1] = column_index;
 
   }
 }
@@ -341,7 +363,7 @@ function begin_import(element) {
           height,
           width
         } = image;
-        if (height > 300 & width > 300) {
+        if (height > 300 && width > 300) {
           alert("Height and Width must not exceed 300px.");
         }
         else {
@@ -399,5 +421,10 @@ eraseBtn.addEventListener("click", () => {
 paintBtn.addEventListener("click", () => {
   erase = false;
 });
+
+//
+startButton.addEventListener("click", () =>{
+  start();
+})
 
 

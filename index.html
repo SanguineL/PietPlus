@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <div class="main"></div>
+    <div class="main">
       <div class="button_wrapper">
         <button class="colorbutton" id='lbutton0'></button>
         <button class="colorbutton" id='mbutton0'></button>
@@ -43,7 +43,6 @@
         <button class="colorbutton" id='lbutton6'></button>
         <button class="colorbutton" id='mbutton6'></button>
         
-        
       </div>
       <div class="wrapper">
         <div class="options">
@@ -70,8 +69,22 @@
         </dialog>
         <div class="container"></div>
       </div>
+      <div class="controls_wrapper">
+        <textarea id="command-display" class="command-disp" disabled></textarea>
+        <button class="command-button" id="start-button">Start</button>
+        <button class="command-button" id="step-button">Step</button>
+        <button class="command-button" id="pause-button">Pause</button>
+        <label id="dpcc-label">DP:->       CC:<-</label>
+        <label>Stack</label>
+        <textarea id="stack-display" class="ide-info" disabled></textarea>
+        <label>Input</label>
+        <textarea id="input" class="ide-info" spellcheck="false"></textarea>
+        <label>Output</label>
+        <textarea id="output" class="ide-info" disabled></textarea>
+      </div>
     </div>
     <!-- Script -->
     <script src="script.js"></script>
+    <script src="interpreter/interpreter.js"></script>
   </body>
 </html>
