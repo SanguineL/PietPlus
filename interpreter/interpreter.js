@@ -7,16 +7,17 @@ let directions = {
 	"down": [0, 1]
 };
 
+let inputs = 0;
+
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
 async function start() {
 	let startCodel = getCodel(0, 0);
 	let currentBlock = getBlock(0, 0);
 	let previousBlock = getBlock(0, 0);
+	let stack = [];
 
-	let endCode = "";
-
-
+	let runs = 0;
 
 	let running = true;
 
@@ -25,9 +26,13 @@ async function start() {
 
 	dpccLabel.innerHTML = genDPCCLabel(dp, cc);
 	commandDisplay.innerHTML = "";
+	output.innerHTML = "";
+
+	pauseButton.addEventListener("click", () => {running = false;});
 
 
-	while (running) {
+	while (running) {	
+		runs = runs + 1;
 		previousBlock = structuredClone(currentBlock);
 
 		for (let i = 0; i < 8; i++) {
@@ -41,9 +46,8 @@ async function start() {
 			}
 
 			if (i%2 == 0) {
-				cc = toggleCC(cc);
+				cc = toggleCC(cc, 1)
 			} else {
-				cc = toggleCC(cc);
 				dp = toggleDP(dp, 1);
 			}
 
@@ -51,19 +55,104 @@ async function start() {
 
 			if (i == 7) {
 				running = false;
-				endCode = "Debug Terminated.";
-				commandDisplay.innerHTML = commandDisplay.innerHTML + endCode;
+				endCode("Debug Terminated.");
 			}
-			await sleep(500);
+
+			//await sleep(200);
 			
 		}
 		unhighlight_block(previousBlock);
 		if (running) {
+			let i = 0;
 			highlight_block(currentBlock);
-			commandDisplay.innerHTML = commandDisplay.innerHTML + get_command(previousBlock, currentBlock) + "\n";
 
-			await sleep(500);
+			switch (get_command(previousBlock, currentBlock)) {
+				case 'push':
+					stack = push(stack, previousBlock.length);
+					break;
+				case 'pop':
+					stack = pop(stack);
+					break;
+				case 'add':
+					stack = add(stack);
+					break;
+				case 'sub':
+					stack = subtract(stack);
+					break;
+				case 'mult':
+					stack = multiply(stack);
+					break;
+				case 'div':
+					stack = divide(stack);
+					break;
+				case 'mod':
+					stack = modulo(stack);
+					break;
+				case 'not':
+					stack = not(stack);
+					break;
+				case 'great':
+					stack = greater(stack);
+					break;
+				case 'point':
+					stack, i = pointer(stack, dp);
+					dp = toggleDP(dp, i);
+					break;
+				case 'switch':
+					stack, i = switch_(stack, cc);
+					cc = toggleCC(cc, i);
+					break;
+				case 'dup':
+					stack = duplicate(stack);
+					break;
+				case 'roll':
+					stack = roll(stack);
+					break;
+				case 'in(n)':
+					stack = input_n(stack, get_next_input());
+					if (stack[stack.length - 1] == 'null') {
+						running = false;
+						endCode("Terminated. Input(n) did not receive Integer.");
+					}
+					break;
+				case 'in(c)':
+					stack = input_c(stack, get_next_input());
+					if (stack[stack.length - 1] == 'null') {
+						running = false;
+						endCode("Terminated. Input(c) did not receive Char.");
+					}
+					break;
+				case 'out(n)':
+					stack, out = output_n(stack);
+					output.innerHTML = output.innerHTML + out;
+					break;
+				case 'out(c)':
+					stack, out = output_c(stack);
+					output.innerHTML = output.innerHTML + out;
+					break;
+				case 'null':
+					break;
+			}
+			if (get_command(previousBlock, currentBlock) != 'null') {
+				commandDisplay.innerHTML = commandDisplay.innerHTML + get_command(previousBlock, currentBlock);
+
+				if (get_command(previousBlock, currentBlock) == "push") {
+					commandDisplay.innerHTML = commandDisplay.innerHTML + " " + previousBlock.length;
+				}
+
+				commandDisplay.innerHTML = commandDisplay.innerHTML + "\n";
+				commandDisplay.scrollTop = commandDisplay.scrollHeight;
+			}
+
+			stackDisplay.innerHTML = JSON.stringify(stack);
+		} //COMMANDS
+
+		if (runs > 1000000) {
+			running = false;
+			commandDisplay.innerHTML = commandDisplay.innerHTML + "Terminated. 1,000,000 attempts exceeded.";
 		}
+
+		//await sleep(500);
 	}
 }
 
@@ -109,20 +198,35 @@ function get_command(previous, current) {
 	return commands[change['hue']][change['light']];
 }
 
-function toggleCC(cc) { //cc or dp
-	if (cc == "left") {
-		return "right";
+function toggleCC(cc, int) { //cc or dp
+	for (let i = 0; i < int; i++) {
+		if (cc == "left") {
+			cc = 'right';
+		} else {
+			cc = 'left';
+		}
 	}
-	return "left";
+
+	return cc;
 }
 
 function toggleDP(dp, int) {
 	let shifts = {
-		"right": {0: "right", 1: "down", 2: "left", 3: "up"},
-		"left": {0: "left", 1: "up", 2: "right", 3: "down"},
-		"up": {0: "up", 1: "right", 2: "down", 3: "left"},
-		"down": {0: "down", 1: "left", 2: "up", 3: "right"}
+		'right': {'-3': 'down', '-2': 'left', '-1': 'up', '0': 'right', '1': 'down', '2': 'left', '3': 'up'},
+		'down': {'-3': 'left', '-2': 'up', '-1': 'right', '0': 'down', '1': 'left', '2': 'up', '3': 'right'},
+		'left': {'-3': 'up', '-2': 'right', '-1': 'down', '0': 'left', '1': 'up', '2': 'right', '3': 'down'},
+		'up': {'-3': 'right', '-2': 'down', '-1': 'left', '0': 'up', '1': 'right', '2': 'down', '3': 'left'},
 	};
 
-	return shifts[dp][int];
+	return shifts[dp][int%4];
+}
+
+function get_next_input() {
+	toReturn = input.value.split("\n")[inputs];
+	inputs = inputs + 1;
+	return toReturn;
+}
+
+function endCode(code) {
+	commandDisplay.innerHTML = commandDisplay.innerHTML + code;
 }

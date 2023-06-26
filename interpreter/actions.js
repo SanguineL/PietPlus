@@ -1,12 +1,12 @@
 // Piet Commands, by Alex Strickland
 
-function push(stack, num) { //Push to stack
+function push (stack, num) { //Push to stack
 	stack.push(num);
 
 	return stack;
 }
 
-function pop(stack) { // Pop off stack.
+function pop (stack) { // Pop off stack.
 
 	if (stack.length < 1) {
 		return false;
@@ -39,7 +39,7 @@ function subtract (stack) { //Subtract top value from 2nd value
 	return push(stack, j-i); //Important. Top value is always subtracted from 2nd top value.
 }
 
-function multiply(stack) { // Multiply top two values
+function multiply (stack) { // Multiply top two values
 	if (stack.length < 2) {
 		return false;
 	}
@@ -50,7 +50,7 @@ function multiply(stack) { // Multiply top two values
 	return push(stack, i*j);
 }
 
-function divide(stack) { // Divide 2nd value from top value
+function divide (stack) { // Divide 2nd value from top value
 	if (stack.length < 2) {
 		return false;
 	}
@@ -61,7 +61,7 @@ function divide(stack) { // Divide 2nd value from top value
 	return push(stack, Math.floor(j/i)); //Integer division
 }
 
-function modulo(stack) { // 2nd value modulo top value
+function modulo (stack) { // 2nd value modulo top value
 	if (stack.length < 2) {
 		return false;
 	}
@@ -72,7 +72,7 @@ function modulo(stack) { // 2nd value modulo top value
 	return push(stack, j%i);
 }
 
-function not(stack) { // Inverts top value
+function not (stack) { // Inverts top value
 	if (stack.length < 1) {
 		return false;
 	}
@@ -86,7 +86,7 @@ function not(stack) { // Inverts top value
 }
 
 
-function greater(stack) { //If 2nd-top value is greater than top value, push 1, else push 0.
+function greater (stack) { //If 2nd-top value is greater than top value, push 1, else push 0.
 	if (stack.length < 2) {
 		return false;
 	}
@@ -101,7 +101,7 @@ function greater(stack) { //If 2nd-top value is greater than top value, push 1, 
 	}
 }
 
-function pointer(stack) { // 
+function pointer (stack, dp) { // 
 	if (stack.length < 1) {
 		return false;
 	}
@@ -111,7 +111,7 @@ function pointer(stack) { //
 	return stack, i;
 }
 
-function switch_(stack) { //Underline neccesary. :(
+function switch_ (stack) { //Underline neccesary. :(
 	if (stack.length < 1) {
 		return false;
 	}
@@ -121,18 +121,17 @@ function switch_(stack) { //Underline neccesary. :(
 	return stack, i;
 }
 
-function duplicate(stack) {
+function duplicate (stack) {
 	if (stack.length < 1) {
 		return false;
 	}
 
-	let i = stack.pop(); //take off
+	let i = structuredClone(stack[stack.length - 1]);
 
-	stack.push(stack, i); // put back on
 	return push(stack, i); //put on again
 }
 
-function roll(stack) {
+function roll (stack) {
 	if (stack.length < 2) {
 		return false;
 	}
@@ -140,28 +139,31 @@ function roll(stack) {
 	let i = stack.pop();
 	let j = stack.pop();
 
-	let toRoll = []
-
-	for (let x = 0; x < j; x++) {
-		toRoll.push(stack.pop());
-	} 
-
-	for (let x = 0; x < i; x++) {
-		toRoll.unshift(toRoll.pop());
+	if (j > stack.length) {
+		j = stack.length;
 	}
 
-	for (let x = 0; x < toRoll.length(); x++) {
-		stack.push(toRoll.shift());
+	if (i > 0) {
+		for (var roll = 0; roll < i; roll++) {
+			stack.splice(-j, 0, stack[stack.length - 1]);
+			stack.pop();
+		} 
+	} else {
+		for (var roll = 0; roll > i; roll--) {
+			stack.push(...stack.splice(-j, 1));
+		}
 	}
 
 	return stack;
+
+
 }
 
-function input_n(stack, n) {
-	return push(stack, n);
+function input_n (stack, n) {
+	return push(stack, parseInt(n));
 }
 
-function input_c(stack, c) {
+function input_c (stack, c) {
 	if (c.length != 1) {
 		return false;
 	}
@@ -169,15 +171,16 @@ function input_c(stack, c) {
 	return push(stack, c.charCodeAt(0));
 }
 
-function output_n(stack) {
+function output_n (stack) {
 	let i = stack.pop();
 
 	return stack, i;
 }
 
-function output_c(stack) {
+function output_c (stack) {
 	let i = stack.pop();
 
 	return stack, String.fromCharCode(i);
 }
+
 

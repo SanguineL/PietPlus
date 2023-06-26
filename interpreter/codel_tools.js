@@ -9,10 +9,14 @@ function getBlock(x, y) { //Using x, y of inital codel.
 	let dRow = [-1, 0, 1, 0];
 	let dCol = [0, 1, 0, -1];
 
+	if (isWhite([[x, y]])) {
+		return [[x, y]];
+	}
+
 	let queue = [];
 	queue.push([x, y]);
 
-	var visited = Array.from(Array(grid_height), ()=> Array(grid_width).fill(false));
+	var visited = Array.from(Array(grid_width), ()=> Array(grid_height).fill(false));
 
 	while (queue.length!=0) {
 		var cell = queue[0];
@@ -53,15 +57,17 @@ function get_extreme_codels(block, dp) {
 			}
 		}
 	} else if (dp == "left") {
+		max = grid_width;
 		for (let i = 0; i < block.length; i++) {
 			if (block[i][0] == max) {
-				extreme_codels.push(blocks[i]);
+				extreme_codels.push(block[i]);
 			} else if (block[i][0] < max) {
 				extreme_codels = [block[i]];
 				max = block[i][0]; //Technically min, but whatever
 			}
 		}
 	} else if (dp == "up") {
+		max = grid_height;
 		for (let i = 0; i < block.length; i++) {
 			if (block[i][1] == max) {
 				extreme_codels.push(block[i]);
@@ -85,36 +91,10 @@ function get_extreme_codels(block, dp) {
 }
 
 function get_extreme_codels_cc(extreme_codels, dp, cc) { // CC LOGIC
-	if (dp == "right") {
-		if (cc == "left") {
-			return extreme_codels[0];
-		} else {
-			return extreme_codels[extreme_codels.length - 1];
-		}
-	}
-
-	if (dp == "left") {
-		if (cc == "right") {
-			return extreme_codels[0];
-		} else {
-			return extreme_codels[extreme_codels.length - 1];
-		}
-	}
-
-	if (dp == "up") {
-		if (cc == "left") {
-			return extreme_codels[0];
-		} else {
-			return extreme_codels[extreme_codels.length - 1];
-		}
-	}
-
-	if (dp == "down") {
-		if (cc == "right") {
-			return extreme_codels[0];
-		} else {
-			return extreme_codels[extreme_codels.length - 1];
-		}
+	if (cc == "left") {
+		return leftMost(extreme_codels, dp);
+	} else {
+		return rightMost(extreme_codels, dp);
 	}
 }
 
@@ -239,6 +219,103 @@ function genDPCCLabel(dp, cc) {
 
 function isBlack(block) {
 	return (getCodel(block[0][0], block[0][1]).style.backgroundColor == "rgb(0, 0, 0)");
+}
+
+function isWhite(block) {
+	return (getCodel(block[0][0], block[0][1]).style.backgroundColor == "rgb(255, 255, 255)");
+}
+
+function leftMost(extreme_codels, dp) {
+	let min = grid_height;
+	let toReturn = false;
+
+	if (dp == "right") {
+		for (let i = 0; i < extreme_codels.length; i++) {
+			if (extreme_codels[i][1] < min) {
+				min = extreme_codels[i][1];
+				toReturn = extreme_codels[i];
+			}
+		}
+	}
+
+	if (dp == "left") {
+		min = 0;
+		for (let i = 0; i < extreme_codels.length; i++) {
+			if (extreme_codels[i][1] > min) {
+				min = extreme_codels[i][1];
+				toReturn = extreme_codels[i];
+			}
+		}
+	}
+
+	if (dp == "up") {
+		min = grid_width;
+		for (let i = 0; i < extreme_codels.length; i++) {
+			if (extreme_codels[i][0] < min) {
+				min = extreme_codels[i][0];
+				toReturn = extreme_codels[i];
+			}
+		}
+	}
+
+	if (dp == "down") {
+		min = 0;
+		for (let i = 0; i < extreme_codels.length; i++) {
+			if (extreme_codels[i][0] > min) {
+				min = extreme_codels[i][0];
+				toReturn = extreme_codels[i];
+			}
+		}
+	}
+
+	return toReturn;
+
+}
+
+function rightMost(extreme_codels, dp) {
+	let min = 0;
+	let toReturn = false;
+
+	if (dp == "right") {
+		for (let i = 0; i < extreme_codels.length; i++) {
+			if (extreme_codels[i][1] > min) {
+				min = extreme_codels[i][1];
+				toReturn = extreme_codels[i];
+			}
+		}
+	}
+
+	if (dp == "left") {
+		min = grid_height;
+		for (let i = 0; i < extreme_codels.length; i++) {
+			if (extreme_codels[i][1] < min) {
+				min = extreme_codels[i][1];
+				toReturn = extreme_codels[i];
+			}
+		}
+	}
+
+	if (dp == "up") {
+		min = 0;
+		for (let i = 0; i < extreme_codels.length; i++) {
+			if (extreme_codels[i][0] > min) {
+				min = extreme_codels[i][0];
+				toReturn = extreme_codels[i];
+			}
+		}
+	}
+
+	if (dp == "down") {
+		min = grid_width;
+		for (let i = 0; i < extreme_codels.length; i++) {
+			if (extreme_codels[i][0] < min) {
+				min = extreme_codels[i][0];
+				toReturn = extreme_codels[i];
+			}
+		}
+	}
+
+	return toReturn;
 }
 
 const toRGBArray = rgbStr => rgbStr.match(/\d+/g).map(Number);

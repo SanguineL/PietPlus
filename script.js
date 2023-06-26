@@ -189,7 +189,6 @@ function create_grid(element, file=null) {
             !isTouchDevice() ? e.clientY : e.touches[0].clientY
           ).id;
           //checker
-          //console.log(colors[selected_color[0]][selected_color[1]]);
           checker(elementId);
         });
         //Stop drawing
@@ -204,41 +203,54 @@ function create_grid(element, file=null) {
     }
   } else if (file) {
     container.innerHTML = "";
+    grid_width = file.width;
+    grid_height = file.height;
     //count variable for generating unique ids
     let count = 0;
     //loop for creating rows
-    for (let i = 0; i < gridHeight.value; i++) {
+    for (let i = 0; i < gridHeight.value; i++) { // I = Y
       //incrementing count by 2
       count += 2;
       //Create row div
       let div = document.createElement("div");
       div.classList.add("gridRow");
       //Create Columns
-      for (let j = 0; j < gridWidth.value; j++) {
+      for (let j = 0; j < gridWidth.value; j++) { // J = X
         count += 2;
         let col = document.createElement("div");
         col.classList.add("gridCol");
         /* We need unique ids for all columns (for touch screen specifically) */
         col.setAttribute("id", `gridCol${count}`);
+
         let color = getPixelXY(file, j, i);
-        col.style.backgroundColor = 'rgb(' + color[0] + ',' + color[1] + ',' + color[2] + ')';
-        col.style.border = '1px solid rgb(' + color[0] + ',' + color[1] + ',' + color[2] + ')';
+        col.style.backgroundColor = 'rgb(' + color[0] + ', ' + color[1] + ', ' + color[2] + ')';
+        col.style.border = '1px solid rgb(' + color[0] + ', ' + color[1] + ', ' + color[2] + ')';
         /*
         For eg if deviceType = "mouse"
         the statement for the event would be events[mouse].down which equals to mousedown
         if deviceType="touch"
         the statement for event would be events[touch].down which equals to touchstart
          */
+        col.addEventListener("mouseover", () => display_block_size(j, i));
         col.addEventListener(events[deviceType].down, () => {
           //user starts drawing
           draw = true;
           //if erase = true then background = transparent else color
           if (erase) {
             col.style.backgroundColor = "rgb(255, 255, 255)";
+            col.style.border = "1px solid #ddd";
+          } else if (tool == 'paint') {
+            col.style.backgroundColor = 'rgb(' + colors[selected_pos[0]][selected_pos[1]].join(',') + ')';
+            col.style.border = '1px solid rgb(' + colors[selected_pos[0]][selected_pos[1]].join(',') + ')';
           } else {
-            col.style.backgroundColor = 'rgb(' + colors[selected_color[0]][selected_color[1]].join(',') + ')';
-            col.style.border = '1px solid rgb(' + colors[selected_color[0]][selected_color[1]].join(',') + ')';
+            let block = getBlock(j, i);
+
+            for (c = 0; c < block.length; c++) {
+              getCodel(block[c][0], block[c][1]).style.backgroundColor = 'rgb(' + colors[selected_pos[0]][selected_pos[1]].join(',') + ')';
+              getCodel(block[c][0], block[c][1]).style.border = '1px solid rgb(' + colors[selected_pos[0]][selected_pos[1]].join(',') + ')';
+            }
           }
+          display_block_size(j, i);
         });
         col.addEventListener(events[deviceType].move, (e) => {
           /* elementFromPoint returns the element at x,y position of mouse */
@@ -247,7 +259,6 @@ function create_grid(element, file=null) {
             !isTouchDevice() ? e.clientY : e.touches[0].clientY
           ).id;
           //checker
-          //console.log(colors[selected_color[0]][selected_color[1]]);
           checker(elementId);
         });
         //Stop drawing
@@ -411,13 +422,13 @@ function begin_import(element) {
   });
 }
 
-function getPixel(imgData, index) {
-  var i = index*4, d = imgData.data;
+function getPixel(img, index) {
+  var i = index*4; d = img.data;
   return [d[i],d[i+1],d[i+2],d[i+3]] // [R,G,B,A]
 }
 
-function getPixelXY(imgData, x, y) {
-  return getPixel(imgData, y*imgData.width+x, 255);
+function getPixelXY(img, x, y) {
+  return getPixel(img, y*img.width+x, 255);
 }
 
 function setPixel(imgData, index, r, g, b, a) {
@@ -446,7 +457,8 @@ function switch_tool(element) {
 }
 
 function display_block_size(x, y) {
-  blockInfoLabel.innerHTML = "Block size: " + getBlock(x, y).length;
+  blockInfoLabel.innerHTML = "Block size: " + getBlock(x, y).length + "<br />";
+  blockInfoLabel.innerHTML = blockInfoLabel.innerHTML + "XY: (" + x +", " + y + ")";
 }
 //Clear Grid
 clearGridButton.addEventListener("click", () => {
