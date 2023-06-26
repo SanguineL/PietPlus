@@ -1,100 +1,128 @@
 //Piet Interpreter, by Alex Strickland
 
-function start() {
+let directions = {
+	"right": [1, 0],
+	"left": [-1, 0],
+	"up": [0, -1],
+	"down": [0, 1]
+};
+
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+async function start() {
 	let startCodel = getCodel(0, 0);
 	let currentBlock = getBlock(0, 0);
+	let previousBlock = getBlock(0, 0);
 
-	highlight_block(currentBlock);
-	
-}
+	let endCode = "";
 
-function getBlock(x, y) { //Using x, y of inital codel.
-	let currentNeighbor;
-	let currentBlockMembers = [[x, y]];
-	let currentCodel;
 
-	//Direction vectors
-	let dRow = [-1, 0, 1, 0];
-	let dCol = [0, 1, 0, -1];
 
-	let queue = [];
-	queue.push([x, y]);
+	let running = true;
 
-	var visited = Array.from(Array(grid_height), ()=> Array(grid_width).fill(false));
+	let dp = "right"; //DIRECTION POINTER
+	let cc = "left"; // CODEL CHOOSER (tie breaker)
 
-	while (queue.length!=0) {
-		var cell = queue[0];
-		var X = cell[0];
-		var Y = cell[1]; 
+	dpccLabel.innerHTML = genDPCCLabel(dp, cc);
+	commandDisplay.innerHTML = "";
 
-		queue.shift();
 
-		for (var i = 0; i < 4; i++) {
+	while (running) {
+		previousBlock = structuredClone(currentBlock);
 
-			var dX = X+dRow[i];
-			var dY = Y+dCol[i];
+		for (let i = 0; i < 8; i++) {
+			possibleNextBlock = get_next_block(currentBlock, dp, cc);
 
-			if (in_same_block(getCodel(X, Y), getCodel(dX, dY)) && visited[dX][dY] == false) {
-				if (!checkArrayInArray(currentBlockMembers, [dX, dY])) {
-					currentBlockMembers.push([dX, dY]);
-					visited[dX][dY] = true;
-					queue.push([dX, dY]);
+			if (possibleNextBlock != "hitWallError") {
+				if (!isBlack(possibleNextBlock)) {
+					currentBlock = possibleNextBlock;
+					break;
 				}
 			}
+
+			if (i%2 == 0) {
+				cc = toggleCC(cc);
+			} else {
+				cc = toggleCC(cc);
+				dp = toggleDP(dp, 1);
+			}
+
+			dpccLabel.innerHTML = genDPCCLabel(dp, cc);
+
+			if (i == 7) {
+				running = false;
+				endCode = "Debug Terminated.";
+				commandDisplay.innerHTML = commandDisplay.innerHTML + endCode;
+			}
+			await sleep(500);
+			
 		}
-	}
-	
-	return currentBlockMembers;
+		unhighlight_block(previousBlock);
+		if (running) {
+			highlight_block(currentBlock);
+			commandDisplay.innerHTML = commandDisplay.innerHTML + get_command(previousBlock, currentBlock) + "\n";
 
-}
-
-function highlight_block(block) { // Outlines current block in BLACK BORDER.
-	for (let i = 0; i < block.length; i++) {
-		currentCodel = getCodel(block[i][0], block[i][1]); //set current block
-
-		currentCodel.style.border = "5px solid black";
-
-		if (checkArrayInArray(block, [block[i][0]-1, block[i][1]])) { //If codel to left in block
-			currentCodel.style.borderLeft = "0px"
+			await sleep(500);
 		}
-
-		if (checkArrayInArray(block, [block[i][0]+1, block[i][1]])) { //If codel to right in block
-			currentCodel.style.borderRight = "0px"
-		}
-
-		if (checkArrayInArray(block, [block[i][0], block[i][1]-1])) { //If codel to top not in block
-			currentCodel.style.borderTop = "0px"
-		}
-
-		if (checkArrayInArray(block, [block[i][0], block[i][1]+1])) { //If codel to bottom not in block
-			currentCodel.style.borderBottom = "0px"
-		}	
 	}
 }
 
-function getCodel(x, y){ // Returns DIV of codel at x, y
-	if (x < 0 || y < 0 || x >= grid_width || y >= grid_height) {
-		return false;
+function get_next_block(block, dp, cc) { //Get the next block based on the current block, DP, and CC.
+	let extreme_codels = get_extreme_codels(block, dp);
+
+	let toNext = [];
+
+	if (extreme_codels.length > 1) {
+		let extreme_codel = get_extreme_codels_cc(extreme_codels, dp, cc);
+		toNext = [extreme_codel[0] + directions[dp][0], extreme_codel[1] + directions[dp][1]];
+	} else {
+		try {
+			toNext = [extreme_codels[0][0] + directions[dp][0], extreme_codels[0][1] + directions[dp][1]];
+		} catch(err) {
+			return "hitWallError";
+		}
 	}
 
-	var rows = container.getElementsByClassName('gridRow');
-	let row = rows.item(y).getElementsByTagName('div');
-	let cell = row.item(x);
-
-	return cell;
+	if (toNext[0] < 0 || toNext[1] < 0 || toNext[0] >= grid_width || toNext[1] >= grid_height) {
+		return "hitWallError";
+	}
+	return getBlock(toNext[0], toNext[1]);
 }
 
-function in_same_block(codel1, codel2) { //Checks if codel2 is same color as codel1. Only use for neighbors.
-	if (codel1 == false || codel2 == false) {
-		return false;
+function get_command(previous, current) {
+	let change = color_comparison(get_block_color(previous), get_block_color(current));
+
+	let commands = {
+		 '-5': {'-2': 'sub', '-1': 'mult', '0': 'add', '1': 'sub', '2': 'mult'},
+		 '-4': {'-2': 'mod', '-1': 'not', '0': 'div', '1': 'mod', '2': 'not'},
+		 '-3': {'-2': 'point', '-1': 'switch', '0': 'great', '1': 'point', '2': 'switch'},
+		 '-2': {'-2': 'roll', '-1': 'in(n)', '0': 'dup', '1': 'roll', '2': 'in(n)'},
+		 '-1': {'-2': 'out(n)', '-1': 'out(c)', '0': 'in(c)', '1': 'out(n)', '2': 'out(c)'},
+		  '0': {'-2': 'push', '-1': 'pop', '0': 'null', '1': 'push', '2': 'pop'},
+		  '1': {'-2': 'sub', '-1': 'mult', '0': 'add', '1': 'sub', '2': 'mult'},
+		  '2': {'-2': 'mod', '-1': 'not', '0': 'div', '1': 'mod', '2': 'not'},
+		  '3': {'-2': 'point', '-1': 'switch', '0': 'great', '1': 'point', '2': 'switch'},
+		  '4': {'-2': 'roll', '-1': 'in(n)', '0': 'dup', '1': 'roll', '2': 'in(n)'},
+		  '5': {'-2': 'out(n)', '-1': 'out(c)', '0': 'in(c)', '1': 'out(n)', '2': 'out(c)'}
 	}
-	if (codel1.style.backgroundColor == codel2.style.backgroundColor) {
-		return true;
-	}
-	return false;
+
+	return commands[change['hue']][change['light']];
 }
 
-function checkArrayInArray(arr, farr){ // Checks if array is inside other array.
-    if(JSON.stringify(arr).includes(JSON.stringify(farr))) return true;
-    return false;
+function toggleCC(cc) { //cc or dp
+	if (cc == "left") {
+		return "right";
+	}
+	return "left";
+}
+
+function toggleDP(dp, int) {
+	let shifts = {
+		"right": {0: "right", 1: "down", 2: "left", 3: "up"},
+		"left": {0: "left", 1: "up", 2: "right", 3: "down"},
+		"up": {0: "up", 1: "right", 2: "down", 3: "left"},
+		"down": {0: "down", 1: "left", 2: "up", 3: "right"}
+	};
+
+	return shifts[dp][int];
 }

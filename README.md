@@ -30,3 +30,4 @@ _Note: This is my first ever legitimate attempt at developing in JavaScript. Som
 - Basic Pixel Art HTML/CSS/JS from _harsh_ on [Code With Random](https://www.codewithrandom.com/2022/12/02/pixel-art-maker-using-javascript/).
 - Breadth-First Search from _ramandeep8423_ on [Geeks For Geeks](https://www.geeksforgeeks.org/breadth-first-traversal-bfs-on-a-2d-array/#).
 - Array.Includes(Array) from _Rahman Qadirzade_ on [StackOverflow](https://www.geeksforgeeks.org/breadth-first-traversal-bfs-on-a-2d-array/#).
+- Matrix Addition from on [ForgetCode](https://forgetcode.com/javascript/2645-addition-of-two-matrices).

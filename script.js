@@ -24,7 +24,8 @@ let pauseButton = document.getElementById("pause-button");
 let input = document.getElementById("input");
 let output = document.getElementById("output");
 let stackDisplay = document.getElementById("stack-display");
-let commandDisplay = document.getElementById("command-disp");
+let commandDisplay = document.getElementById("command-display");
+let dpccLabel = document.getElementById("dpcc-label");
 
 let toolSwitchButton = document.getElementById("toolswitch");
 
