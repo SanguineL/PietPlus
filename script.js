@@ -152,6 +152,15 @@ function create_grid(element, file=null) {
         count += 2;
         let col = document.createElement("div");
         col.classList.add("gridCol");
+
+        if (gridWidth.value > 45) {
+          col.style.maxWidth = Math.floor((45 * 30) / gridWidth.value) + "px";
+          col.style.maxHeight = Math.floor((45 * 30) / gridWidth.value) + "px";
+        } else if (gridHeight.value > 25) {
+          col.style.maxWidth = Math.floor((25 * 30) / gridHeight.value) + "px";
+          col.style.maxHeight = Math.floor((25 * 30) / gridHeight.value) + "px";
+        }
+
         /* We need unique ids for all columns (for touch screen specifically) */
         col.setAttribute("id", `gridCol${count}`);
         col.style.backgroundColor = "rgb(255, 255, 255)"
@@ -221,6 +230,15 @@ function create_grid(element, file=null) {
         col.classList.add("gridCol");
         /* We need unique ids for all columns (for touch screen specifically) */
         col.setAttribute("id", `gridCol${count}`);
+
+        if (gridWidth.value > 45) {
+          console.log('here');
+          col.style.maxWidth = Math.floor((45 * 30) / gridWidth.value) + "px";
+          col.style.maxHeight = Math.floor((45 * 30) / gridWidth.value) + "px";
+        } else if (gridHeight.value > 25) {
+          col.style.maxWidth = Math.floor((25 * 30) / gridHeight.value) + "px";
+          col.style.maxHeight = Math.floor((25 * 30) / gridHeight.value) + "px";
+        }
 
         let color = getPixelXY(file, j, i);
         col.style.backgroundColor = 'rgb(' + color[0] + ', ' + color[1] + ', ' + color[2] + ')';

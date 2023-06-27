@@ -1,5 +1,8 @@
 // Codel and Block Tools, by Alex Strickland
 
+let lastColor = "";
+let lastBlock;
+
 function getBlock(x, y) { //Using x, y of inital codel.
 	let currentNeighbor;
 	let currentBlockMembers = [[x, y]];
@@ -9,9 +12,16 @@ function getBlock(x, y) { //Using x, y of inital codel.
 	let dRow = [-1, 0, 1, 0];
 	let dCol = [0, 1, 0, -1];
 
-	if (isWhite([[x, y]])) {
+	if (isWhite([[x, y]]) && running) {
 		return [[x, y]];
 	}
+
+	if (isWhite([[x, y]]) && lastColor == get_block_color([[x, y]])) { // Save time from searching every time.
+		console.log('here');
+		return lastBlock;
+	}
+
+	lastColor = get_block_color([[x, y]]);
 
 	let queue = [];
 	queue.push([x, y]);
@@ -39,7 +49,7 @@ function getBlock(x, y) { //Using x, y of inital codel.
 			}
 		}
 	}
-	
+	lastBlock = currentBlockMembers;
 	return currentBlockMembers;
 
 }

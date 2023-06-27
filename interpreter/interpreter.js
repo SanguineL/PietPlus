@@ -8,6 +8,7 @@ let directions = {
 };
 
 let inputs = 0;
+let running = false;
 
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
@@ -19,7 +20,8 @@ async function start() {
 
 	let runs = 0;
 
-	let running = true;
+	running = true;
+	inputs = 0;
 
 	let dp = "right"; //DIRECTION POINTER
 	let cc = "left"; // CODEL CHOOSER (tie breaker)
@@ -134,7 +136,7 @@ async function start() {
 					break;
 			}
 			if (get_command(previousBlock, currentBlock) != 'null') {
-				commandDisplay.innerHTML = commandDisplay.innerHTML + get_command(previousBlock, currentBlock);
+				commandDisplay.innerHTML = commandDisplay.innerHTML + get_command(previousBlock, currentBlock).toUpperCase();
 
 				if (get_command(previousBlock, currentBlock) == "push") {
 					commandDisplay.innerHTML = commandDisplay.innerHTML + " " + previousBlock.length;
@@ -147,12 +149,14 @@ async function start() {
 			stackDisplay.innerHTML = JSON.stringify(stack);
 		} //COMMANDS
 
-		if (runs > 1000000) {
+		if (runs > 10000) {
 			running = false;
-			commandDisplay.innerHTML = commandDisplay.innerHTML + "Terminated. 1,000,000 attempts exceeded.";
+			commandDisplay.innerHTML = commandDisplay.innerHTML + "Terminated. 10,000 attempts exceeded.";
 		}
 
-		//await sleep(500);
+		runs = runs + 1;
+
+		await sleep(500);
 	}
 }
 

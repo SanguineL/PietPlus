@@ -124,7 +124,6 @@ input[type="color"]::-moz-color-swatch {
 .gridCol {
   height: 30px;
   width: 30px;
-  min-width: 20px;
   border: 1px solid #ddd;
 }
 .gridRow {
@@ -132,7 +131,7 @@ input[type="color"]::-moz-color-swatch {
 }
 .container {
   max-height: 90vh;
-  max-width:  65em;
+  max-width:  150vh;
   overflow-x: auto;
   overflow-y: auto;
   display: normal;
