@@ -38,4 +38,5 @@ _Third Note: Would not recommend having a grid much larger than 50x50._
 - Basic Pixel Art HTML/CSS/JS from _harsh_ on [Code With Random](https://www.codewithrandom.com/2022/12/02/pixel-art-maker-using-javascript/).
 - Breadth-First Search from _ramandeep8423_ on [Geeks For Geeks](https://www.geeksforgeeks.org/breadth-first-traversal-bfs-on-a-2d-array/#).
 - Array.Includes(Array) from _Rahman Qadirzade_ on [StackOverflow](https://www.geeksforgeeks.org/breadth-first-traversal-bfs-on-a-2d-array/#).
-- Matrix Addition from on [ForgetCode](https://forgetcode.com/javascript/2645-addition-of-two-matrices).
+- Matrix Addition from [ForgetCode](https://forgetcode.com/javascript/2645-addition-of-two-matrices).
+- RGB to Array from [30SecondsOfCode](https://www.30secondsofcode.org/js/s/to-rgb-array/).
