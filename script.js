@@ -498,4 +498,8 @@ startButton.addEventListener("click", () =>{
   start();
 })
 
+stepButton.addEventListener("click", () => {
+  step();
+})
+
 

@@ -17,7 +17,6 @@ function getBlock(x, y) { //Using x, y of inital codel.
 	}
 
 	if (isWhite([[x, y]]) && lastColor == get_block_color([[x, y]])) { // Save time from searching every time.
-		console.log('here');
 		return lastBlock;
 	}
 

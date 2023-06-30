@@ -12,21 +12,26 @@ let running = false;
 
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
+
+let currentBlock;
+let previousBlock;
+let dp = "right"; //DIRECTION POINTER
+let cc = "left"; // CODEL CHOOSER (tie breaker)
+let stack = [];
+let runs = 0;
+
+
+dpccLabel.innerHTML = genDPCCLabel(dp, cc);
+
 async function start() {
-	let startCodel = getCodel(0, 0);
-	let currentBlock = getBlock(0, 0);
-	let previousBlock = getBlock(0, 0);
-	let stack = [];
-
-	let runs = 0;
-
+	currentBlock = getBlock(0, 0);
+	previousBlock = getBlock(0, 0);
 	running = true;
 	inputs = 0;
-
-	let dp = "right"; //DIRECTION POINTER
-	let cc = "left"; // CODEL CHOOSER (tie breaker)
-
-	dpccLabel.innerHTML = genDPCCLabel(dp, cc);
+	dp = "right";
+	cc = "left";
+	stack = [];
+	runs = 0;
 	commandDisplay.innerHTML = "";
 	output.innerHTML = "";
 
@@ -57,6 +62,7 @@ async function start() {
 
 			if (i == 7) {
 				running = false;
+				console.log('this');
 				endCode("Debug Terminated.");
 			}
 
@@ -99,10 +105,12 @@ async function start() {
 				case 'point':
 					stack, i = pointer(stack, dp);
 					dp = toggleDP(dp, i);
+					dpccLabel.innerHTML = genDPCCLabel(dp, cc);
 					break;
 				case 'switch':
 					stack, i = switch_(stack, cc);
 					cc = toggleCC(cc, i);
+					dpccLabel.innerHTML = genDPCCLabel(dp, cc);
 					break;
 				case 'dup':
 					stack = duplicate(stack);
@@ -151,13 +159,181 @@ async function start() {
 
 		if (runs > 10000) {
 			running = false;
-			commandDisplay.innerHTML = commandDisplay.innerHTML + "Terminated. 10,000 attempts exceeded.";
+			endCode("Terminated. 10,000 attempts exceeded.");
+			unhighlight_block(currentBlock);
+		}
+		console.log(stack);
+		if (typeof stack == "boolean") {
+			console.log(stack);
+			console.log('here');
+			running = false;
+			endCode("Terminated. Stack Underflow.");
+			unhighlight_block(currentBlock);
 		}
 
-		runs = runs + 1;
-
-		await sleep(500);
 	}
+}
+
+let c = 0;
+
+function step() {
+
+	console.log(running);
+	if (!running) {
+		running = true;
+		c = 0;
+		inputs = 0;
+		dp = "right";
+		cc = "left";
+		stack = [];
+		runs = 0;
+		currentBlock = getBlock(0, 0);
+		previousBlock = getBlock(0, 0);
+		commandDisplay.innerHTML = "";
+		output.innerHTML = "";
+		stackDisplay.innerHTML = "";
+		console.log('here');
+	}
+
+	let cont = false;
+
+	previousBlock = structuredClone(currentBlock);
+
+	possibleNextBlock = get_next_block(currentBlock, dp, cc);
+
+	if (possibleNextBlock != "hitWallError") {
+		if (!isBlack(possibleNextBlock)) {
+			currentBlock = possibleNextBlock;
+			cont = true;
+		} else {
+			if (c%2 == 0) {
+				cc = toggleCC(cc, 1)
+			} else {
+				dp = toggleDP(dp, 1);
+			}
+			c = c + 1;
+		}
+	} else {
+		if (c%2 == 0) {
+			cc = toggleCC(cc, 1)
+		} else {
+			dp = toggleDP(dp, 1);
+		}
+		c = c + 1;
+	}
+
+	if (c == 8) {
+		running = false;
+		endCode("Debug Terminated.")
+	}
+
+
+	dpccLabel.innerHTML = genDPCCLabel(dp, cc);
+
+
+	if (running && cont) {
+		c = 0;
+		let i = 0;
+		unhighlight_block(previousBlock);
+		highlight_block(currentBlock);
+
+		switch (get_command(previousBlock, currentBlock)) {
+			case 'push':
+				stack = push(stack, previousBlock.length);
+				break;
+			case 'pop':
+				stack = pop(stack);
+				break;
+			case 'add':
+				stack = add(stack);
+				break;
+			case 'sub':
+				stack = subtract(stack);
+				break;
+			case 'mult':
+				stack = multiply(stack);
+				break;
+			case 'div':
+				stack = divide(stack);
+				break;
+			case 'mod':
+				stack = modulo(stack);
+				break;
+			case 'not':
+				stack = not(stack);
+				break;
+			case 'great':
+				stack = greater(stack);
+				break;
+			case 'point':
+				stack, i = pointer(stack, dp);
+				dp = toggleDP(dp, i);
+				dpccLabel.innerHTML = genDPCCLabel(dp, cc);
+				break;
+			case 'switch':
+				stack, i = switch_(stack, cc);
+				cc = toggleCC(cc, i);
+				dpccLabel.innerHTML = genDPCCLabel(dp, cc);
+				break;
+			case 'dup':
+				stack = duplicate(stack);
+				break;
+			case 'roll':
+				stack = roll(stack);
+				break;
+			case 'in(n)':
+				stack = input_n(stack, get_next_input());
+				if (stack[stack.length - 1] == 'null') {
+					running = false;
+					endCode("Terminated. Input(n) did not receive Integer.");
+				}
+				break;
+			case 'in(c)':
+				stack = input_c(stack, get_next_input());
+				if (stack[stack.length - 1] == 'null') {
+					running = false;
+					endCode("Terminated. Input(c) did not receive Char.");
+				}
+				break;
+			case 'out(n)':
+				stack, out = output_n(stack);
+				output.innerHTML = output.innerHTML + out;
+				break;
+			case 'out(c)':
+				stack, out = output_c(stack);
+				output.innerHTML = output.innerHTML + out;
+				break;
+			case 'null':
+				break;
+		}
+		if (get_command(previousBlock, currentBlock) != 'null') {
+			commandDisplay.innerHTML = commandDisplay.innerHTML + get_command(previousBlock, currentBlock).toUpperCase();
+
+			if (get_command(previousBlock, currentBlock) == "push") {
+				commandDisplay.innerHTML = commandDisplay.innerHTML + " " + previousBlock.length;
+			}
+
+			commandDisplay.innerHTML = commandDisplay.innerHTML + "\n";
+			commandDisplay.scrollTop = commandDisplay.scrollHeight;
+		}
+
+		stackDisplay.innerHTML = JSON.stringify(stack);
+	} //COMMANDS
+
+	if (runs > 10000) {
+		running = false;
+		endCode("Terminated. 10,000 attempts exceeded.");
+		unhighlight_block(currentBlock);
+	}
+
+	if (stack == false) {
+		running = false;
+		console.log('what');
+		endCode("Terminated. Stack Underflow.");
+		unhighlight_block(currentBlock);
+	}
+
+	runs = runs + 1;
 }
 
 function get_next_block(block, dp, cc) { //Get the next block based on the current block, DP, and CC.

@@ -7,7 +7,6 @@ function push (stack, num) { //Push to stack
 }
 
 function pop (stack) { // Pop off stack.
-
 	if (stack.length < 1) {
 		return false;
 	}
@@ -17,7 +16,6 @@ function pop (stack) { // Pop off stack.
 }
 
 function add (stack) { // Add top two values
-
 	if (stack.length < 2) {
 		return false;
 	}
@@ -165,19 +163,25 @@ function input_n (stack, n) {
 
 function input_c (stack, c) {
 	if (c.length != 1) {
-		return false;
+		return stack;
 	}
 
 	return push(stack, c.charCodeAt(0));
 }
 
 function output_n (stack) {
+	if (stack.length < 1) {
+		return false;
+	}
 	let i = stack.pop();
 
 	return stack, i;
 }
 
 function output_c (stack) {
+	if (stack.length < 1) {
+		return false;
+	}
 	let i = stack.pop();
 
 	return stack, String.fromCharCode(i);
