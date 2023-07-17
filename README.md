@@ -32,8 +32,9 @@ _Note: This is my first ever legitimate attempt at developing in JavaScript. Som
 
 _Second Note: According to my tests, the Interpreter is correct in its traversal and behavior. If it is not, please let me know._
 
-_Third Note: Would not recommend having a grid much larger than 50x50._
+_Third Note: Would not recommend having a grid much larger than 50x50 for performance._
 
+## Resources Used
 - JavaScript Array-Shifting code from _ayane\_m_ on [StackOverflow](https://stackoverflow.com/questions/36215355/what-is-a-good-way-to-rotate-circular-shift-a-two-dimensional-array).
 - Basic Pixel Art HTML/CSS/JS from _harsh_ on [Code With Random](https://www.codewithrandom.com/2022/12/02/pixel-art-maker-using-javascript/).
 - Breadth-First Search from _ramandeep8423_ on [Geeks For Geeks](https://www.geeksforgeeks.org/breadth-first-traversal-bfs-on-a-2d-array/#).
