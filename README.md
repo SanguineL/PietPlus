@@ -4,10 +4,7 @@ A JavaScript-based IDE and Interpreter for Piet. See it in action [here](https:/
 Piet is an esoteric programming language, which is based on the geometric artist Piet Mondriaan. The language specifies actions based on the transitions of colors. For a detailed explanation, please visit [the official website](https://www.dangermouse.net/esoteric/piet.html)
 
 ## WORK-IN-PROGRESS
-- Different Codel Sizes
-- Shortcuts
 - Color Filter
-- Improved Layout
 
 ## Features
 - IDE
@@ -20,6 +17,9 @@ Piet is an esoteric programming language, which is based on the geometric artist
 - Import from Image
 - Export to Image
 - Grid Scaling instead of Scrolling
+- Different Codel Sizes
+- [ascii-piet](https://github.com/dloscutoff/ascii-piet) support
+- Link shareability
 
 ## Future Additions
 - Different Codel Sizes
