@@ -43,11 +43,13 @@ body {
   width: 100%;
   border-radius: 8px;
   text-align: center;
+  text-wrap: wrap;
 }
 
 label {
   display: block;
   color: #ffffff;
+  text-wrap: wrap;
 }
 span {
   position: relative;
@@ -81,7 +83,6 @@ button {
   color: #ffffff;
   border-radius: 5px;
   padding: 5px;
-  width: 18%;
 }
 
 .colorbutton {
@@ -124,7 +125,7 @@ input[type="color"]::-moz-color-swatch {
 .gridCol {
   height: 30px;
   width: 30px;
-  border: 1px solid #ddd;
+  border: .5px solid #999;
 }
 .gridRow {
   display: flex;
@@ -153,7 +154,7 @@ input[type="color"]::-moz-color-swatch {
   vertical-align: top;
   width: 15%;
   min-width: 15%;
-  height: 90vh;
+  height: 100vh;
   text-align: center;
 }
 
@@ -171,7 +172,6 @@ textarea:disabled {
   margin: 10px 0px 10px 0px;
 }
 
-.ide-info {
-  padding: 3px;
-  height: 17%;
+.top-button {
+    width: 18%;
 }

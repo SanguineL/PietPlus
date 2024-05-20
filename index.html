@@ -3,7 +3,7 @@
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="author" content="Alex Strickland" />
-    <meta name="copyright" content="2023" />
+    <meta name="copyright" content="2024" />
     <title>PietPlus</title>
     <!-- Google Fonts -->
     <link
@@ -56,37 +56,55 @@
         <div class="block-info">
           <label id="block-info-label"></label>
         </div>
+        <div id ="ascii-div" class="block-info">
+          <label id="ascii-piet-label"></label>
+        </div>
       </div> <!-- END OF LEFT COLUMN -->
       <div class="wrapper">
-        <div class="options">
-          <div class="opt-wrapper">
-            <button id="reset-grid">Config Grid</button>
-            <button id="clear-grid">Clear Grid</button>
-            <button id="erase-btn">Erase</button>
-            <button id="paint-btn">Draw</button>
-            <input type="file" class="file" id="attachment" style="display: none;" />
-            <button id="upload-image-btn">Import</button>
-            <button id="save-image-btn">Save</button>
-          </div>
-        </div> <!-- END OF OPTIONS -->
-        <dialog id = "dialog">
-          <div class="gridDir">
-            <label for="width-range">Width</label>
-            <input type="number" id="width-range" max="300"/>
-          </div>
-          <div class="gridDir">
-            <label for="height-range">Height</label>
-            <input type="number" id="height-range" max="300" />
-          </div>
-          <button id="submit-grid">Create Grid</button>
-        </dialog>
-        <div class="container"></div>
+          <div class="options">
+              <div class="opt-wrapper">
+                  <button class="top-button" id="reset-grid">Config Grid</button>
+                  <button class="top-button" id="clear-grid">Clear Grid</button>
+                  <button class="top-button" id="erase-btn">Erase</button>
+                  <button class="top-button" id="paint-btn">Draw</button>
+                  <input type="file" class="file" id="attachment" style="display: none;" />
+                  <button class="top-button" id="upload-image-btn">Import</button>
+                  <button class="top-button" id="save-image-btn">Save</button>
+              </div>
+          </div> <!-- END OF OPTIONS -->
+          <dialog id="dialog">
+              <div class="gridDir">
+                  <label for="width-range">Width</label>
+                  <input type="number" id="width-range" max="300" />
+              </div>
+              <div class="gridDir">
+                  <label for="height-range">Height</label>
+                  <input type="number" id="height-range" max="300" />
+              </div>
+              <button id="submit-grid">Create Grid</button>
+          </dialog>
+          <dialog id="importDialog">
+              <div class="gridDir">
+                  <button id="image-import">From Image</button>
+              </div>
+              <div class="gridDir">
+                  <button id="ascii-import">From ascii-piet</button>
+              </div>
+          </dialog>
+          <dialog id="asciiDialog">
+              <div class="gridDir">
+                  <label for="width-range">Enter ascii-piet</label>
+                  <input type="text" id="ascii-entry"/>
+              </div>
+              <button id="submit-ascii">Import</button>
+          </dialog>
+          <div class="container"></div>
       </div>
       <div class="controls_wrapper">
         <textarea id="command-display" class="command-disp" disabled></textarea>
         <button class="command-button" id="start-button">Start</button>
         <button class="command-button" id="step-button">Step</button>
-        <button class="command-button" id="pause-button">Pause</button>
+        <button class="command-button" id="pause-button">Reset</button>
         <label id="dpcc-label">DP:->       CC:<-</label>
         <label>Stack</label>
         <textarea id="stack-display" class="ide-info" disabled></textarea>

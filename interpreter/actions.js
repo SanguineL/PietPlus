@@ -157,16 +157,29 @@ function roll (stack) {
 
 }
 
-function input_n (stack, n) {
-	return push(stack, parseInt(n));
+
+function input_n(stack, n) {
+	try {
+		if (n.length != 1) {
+			return stack;
+		}
+
+		return push(stack, parseInt(n));
+	} catch (err) {
+		return [null];
+	}
 }
 
-function input_c (stack, c) {
-	if (c.length != 1) {
-		return stack;
-	}
+function input_c(stack, c) {
+	try {
+		if (c.length != 1) {
+			return stack;
+		}
 
-	return push(stack, c.charCodeAt(0));
+		return push(stack, c.charCodeAt(0));
+	} catch (err) {
+		return [null];
+	}
 }
 
 function output_n (stack) {
