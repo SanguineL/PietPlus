@@ -62,7 +62,6 @@ async function start() {
 
 			if (i == 7) {
 				running = false;
-				console.log('this');
 				endCode("Debug Terminated.");
 			}
 
@@ -120,14 +119,14 @@ async function start() {
 					break;
 				case 'in(n)':
 					stack = input_n(stack, get_next_input());
-					if (stack[stack.length - 1] == 'null') {
+					if (stack[stack.length - 1] == null) {
 						running = false;
 						endCode("Terminated. Input(n) did not receive Integer.");
 					}
 					break;
 				case 'in(c)':
 					stack = input_c(stack, get_next_input());
-					if (stack[stack.length - 1] == 'null') {
+					if (stack[stack.length - 1] == null) {
 						running = false;
 						endCode("Terminated. Input(c) did not receive Char.");
 					}
@@ -162,13 +161,10 @@ async function start() {
 			endCode("Terminated. 10,000 attempts exceeded.");
 			unhighlight_block(currentBlock);
 		}
-		console.log(stack);
 		if (typeof stack == "boolean") {
-			console.log(stack);
-			console.log('here');
 			running = false;
 			endCode("Terminated. Stack Underflow.");
-			unhighlight_block(currentBlock);
+			//highlight_block(currentBlock);
 		}
 
 	}
@@ -177,8 +173,6 @@ async function start() {
 let c = 0;
 
 function step() {
-
-	console.log(running);
 	if (!running) {
 		running = true;
 		c = 0;
@@ -192,7 +186,6 @@ function step() {
 		commandDisplay.innerHTML = "";
 		output.innerHTML = "";
 		stackDisplay.innerHTML = "";
-		console.log('here');
 	}
 
 	let cont = false;
@@ -283,14 +276,14 @@ function step() {
 				break;
 			case 'in(n)':
 				stack = input_n(stack, get_next_input());
-				if (stack[stack.length - 1] == 'null') {
+				if (stack[stack.length - 1] == null) {
 					running = false;
 					endCode("Terminated. Input(n) did not receive Integer.");
 				}
 				break;
 			case 'in(c)':
 				stack = input_c(stack, get_next_input());
-				if (stack[stack.length - 1] == 'null') {
+				if (stack[stack.length - 1] == null) {
 					running = false;
 					endCode("Terminated. Input(c) did not receive Char.");
 				}
@@ -326,14 +319,18 @@ function step() {
 		unhighlight_block(currentBlock);
 	}
 
-	if (stack == false) {
+	if (stack == false && typeof(stack) != typeof([])) {
 		running = false;
-		console.log('what');
 		endCode("Terminated. Stack Underflow.");
-		unhighlight_block(currentBlock);
+		//unhighlight_block(currentBlock);
 	}
 
 	runs = runs + 1;
+}
+
+function reset() {
+	unhighlight_block(currentBlock);
+	running = false;
 }
 
 function get_next_block(block, dp, cc) { //Get the next block based on the current block, DP, and CC.

@@ -25,6 +25,7 @@ function getBlock(x, y) { //Using x, y of inital codel.
 	let queue = [];
 	queue.push([x, y]);
 
+	console.log(grid_width, grid_height);
 	var visited = Array.from(Array(grid_width), ()=> Array(grid_height).fill(false));
 
 	while (queue.length!=0) {
