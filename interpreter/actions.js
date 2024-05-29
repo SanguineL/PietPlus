@@ -160,10 +160,6 @@ function roll (stack) {
 
 function input_n(stack, n) {
 	try {
-		if (n.length != 1) {
-			return stack;
-		}
-
 		return push(stack, parseInt(n));
 	} catch (err) {
 		return [null];
