@@ -22,11 +22,9 @@ Piet is an esoteric programming language, which is based on the geometric artist
 - Link shareability
 
 ## Future Additions
-- Different Codel Sizes
 - Improved Layout
 - Compiler??
-- Shortcuts (Ex: 'x' for 'push')
-- Color filter (only allow typical 20 Piet colors)
+- Breakpoint Codel
 
 _Note: This is my first ever legitimate attempt at developing in JavaScript. Some code has been taken from other sources, especially in the beginning stages of development. I will attribute each source I have used below._
 
