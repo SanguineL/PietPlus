@@ -20,6 +20,8 @@ let cc = "left"; // CODEL CHOOSER (tie breaker)
 let stack = [];
 let runs = 0;
 
+let logString = "";
+
 
 dpccLabel.innerHTML = genDPCCLabel(dp, cc);
 
@@ -32,7 +34,8 @@ async function start() {
 	cc = "left";
 	stack = [];
 	runs = 0;
-	commandDisplay.innerHTML = "";
+	logString = ""
+	//commandDisplay.innerHTML = "";
 	output.innerHTML = "";
 
 	pauseButton.addEventListener("click", () => {running = false;});
@@ -143,18 +146,16 @@ async function start() {
 					break;
 			}
 			if (get_command(previousBlock, currentBlock) != 'null') {
-				commandDisplay.innerHTML = commandDisplay.innerHTML + get_command(previousBlock, currentBlock).toUpperCase();
+				logString = logString + get_command(previousBlock, currentBlock).toUpperCase();
 
 				if (get_command(previousBlock, currentBlock) == "push") {
-					commandDisplay.innerHTML = commandDisplay.innerHTML + " " + previousBlock.length;
+					logString = logString + " " + previousBlock.length;
 				}
 
-				commandDisplay.innerHTML = commandDisplay.innerHTML + "\n";
-				commandDisplay.scrollTop = commandDisplay.scrollHeight;
-			}
+				logString = logString + "\n";
 
-			stackDisplay.innerHTML = JSON.stringify(stack);
-		} //COMMANDS
+			}
+		}
 
 		if (runs > 10000) {
 			running = false;
@@ -168,6 +169,9 @@ async function start() {
 		}
 
 	}
+
+	commandDisplay.innerHTML = logString;
+	commandDisplay.scrollTop = commandDisplay.scrollHeight;
 }
 
 let c = 0;
@@ -405,5 +409,5 @@ function get_next_input() {
 }
 
 function endCode(code) {
-	commandDisplay.innerHTML = commandDisplay.innerHTML + code;
+	logString = logString + code;
 }
